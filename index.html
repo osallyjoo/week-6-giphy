@@ -12,7 +12,7 @@
   <div class="container">
     <h1>Animal Gifs</h1>
 
-    <div id="buttons-view"></div>
+    <div id="buttons-view"></div><br>
 
     <form id="animal-form">
       <label for="animal-input">Add an Animal</label>
@@ -69,9 +69,9 @@
       renderButtons();
 
 
-      $("#buttons-view").on("click", ".animals", function() {
+      $("#buttons-view").on("click", ".animal", function() {
 
-        // $("#gifs-go-here" ).empty();
+        $("#gifs-go-here" ).empty();
 
         var animal = $(this).attr("data-name");
         var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
