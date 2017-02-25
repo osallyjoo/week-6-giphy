@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GifTastic</title>
+</head>
+
+<body>
+
+
+  <div class="container">
+    <h1>Animal Gifs</h1>
+
+    <div id="buttons-view"></div>
+
+    <form id="animal-form">
+      <label for="animal-input">Add an Animal</label>
+      <input type="text" id="animal-input"><br>
+
+      <input id="add-animal" type="submit" value="Submit">
+    </form>
+
+
+    <div id="gifs-go-here"></div>
+
+
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript">
+
+
+      var animals = ["dog", "cat", "dolphin", "turtle", "lion", "penguin", "tiger", "fox", "bear", "rabbit"];
+
+
+      function renderButtons() {
+
+        $("#buttons-view").empty();
+
+        for (var i = 0; i < animals.length; i++) {
+
+          var a = $("<button>");
+
+          a.addClass("animal");
+
+          a.attr("data-name", animals[i]);
+
+          a.text(animals[i]);
+
+          $("#buttons-view").append(a);
+
+        }
+
+      };
+
+
+      $("#add-animal").on("click", function(event) {
+
+        event.preventDefault();
+
+        var animal = $("#animal-input").val().trim();
+
+        animals.push(animal);
+
+        renderButtons();
+
+      });
+
+
+      renderButtons();
+
+
+      $("#buttons-view").on("click", ".animals", function() {
+
+        // $("#gifs-go-here" ).empty();
+
+        var animal = $(this).attr("data-name");
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).done(function(response) {
+
+          console.log(response);
+
+
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+
+            var animalDiv = $("<div class='animal'>");
+
+            var p = $("<p>");
+
+            p.text("Rating: " + results[i].rating);
+
+            var animalImage = $("<img>").attr("data-state", "still");
+
+            animalImage.attr("data-animate", results[i].images.fixed_height.url);
+
+            animalImage.attr("data-still", results[i].images.fixed_height_still.url);
+
+            animalImage.attr("src", results[i].images.fixed_height_still.url);
+
+            animalDiv.append(p);
+
+            animalDiv.append(animalImage);
+
+            $("#gifs-go-here").prepend(animalDiv);
+          }
+
+
+        $("img").on("click", function() {
+
+          var state = $(this).attr("data-state");
+
+          if (state === "still") {
+
+            $(this).attr("src", $(this).attr("data-animate"));
+
+            $(this).attr("data-state", "animate");
+
+          } else {
+
+            $(this).attr("src", $(this).attr("data-still"));
+
+            $(this).attr("data-state", "still");
+
+          }
+
+        });
+
+      });
+
+    });
+
+    </script>
+
+
+  </div>
+</body>
+</html>
